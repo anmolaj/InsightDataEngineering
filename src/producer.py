@@ -1,7 +1,9 @@
+#
 from kafka import KafkaProducer
 from kafka.errors import KafkaError
 
-def produce():
+
+if __name__ == "__main__":
 	"""
 	Motivation: Send tweets as a Stream for PySpark Consumer
 	Output: Tweets
@@ -9,7 +11,7 @@ def produce():
 	producer = KafkaProducer(bootstrap_servers=['localhost:9092'])
 
 	# Asynchronous by default
-	future = producer.send('my-topic', b'raw_bytes')
+	future = producer.send('tweet-topic', b'raw_bytes')
 
 	# Block for 'synchronous' sends
 	try:
@@ -25,9 +27,7 @@ def produce():
 	print (record_metadata.offset)
 
 	# produce keyed messages to enable hashed partitioning
-	producer.send('my-topic', key=b'foo', value=b'bar')
-	producer.send('my-topic', b"Trial message")
-
-if __name__ == "__main__":
-	produce()
+	producer.send('my-topic', "Trial message 1")
+	producer.send('my-topic', "Trial message 2")
+	
 
