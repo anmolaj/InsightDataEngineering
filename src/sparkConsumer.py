@@ -15,21 +15,22 @@ if __name__ == "__main__":
 	sc = SparkContext(appName="TweetProcess")
 	ssc= StreamingContext(sc,5)
 	sc.setLogLevel("WARN")
-	brokers=['localhost:9092']
-	topic="tweet-topic"
+
+	brokers = 'ip-10-0-0-4:9092,ip-10-0-0-5:9092'
+	topic="tweet-topic2"
 
 	ioStream=KafkaUtils.createDirectStream(ssc,[topic],{"metadata.broker.list": brokers})
 
-	# print (type(ioStream))
-
-	print ("HELL")
-
 	#Trial code from https://apache.googlesource.com/spark/+/master/examples/src/main/python/streaming/direct_kafka_wordcount.py
-	lines = ioStream.map(lambda x: x[1])
-	counts = ioStream.flatMap(lambda line: line.split(" ")) \
-        .map(lambda word: (word, 1)) \
-        .reduceByKey(lambda a, b: a+b)
-        counts.pprint()
+	ioStream.pprint()
+	# lines = ioStream.map(lambda x: x[1])
+	# lines.pprint().encode('ascii', 'ignore')
+
+	#lines.saveAsTextFiles("test1")
+	# counts = ioStream.flatMap(lambda line: line.split(" ")) \
+ #        .map(lambda word: (word, 1)) \
+ #        .reduceByKey(lambda a, b: a+b)
+ #        counts.pprint()
 
 	ssc.start()
 	ssc.awaitTermination()
