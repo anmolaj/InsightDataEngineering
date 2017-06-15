@@ -6,6 +6,31 @@ from pyspark import SparkContext
 from pyspark.streaming import StreamingContext
 from pyspark.streaming.kafka import KafkaUtils
 
+##For Cleaning purposes
+import nltk
+import string
+
+def process(text,lemmatizer=nltk.stem.wordnet.WordNetLemmatizer()):
+	"""
+	Motivation : Process the incoming tweets to be able to remove extra symbols and make them all similar
+	"""
+
+	text=text.lower()
+	text=text.replace('\'s','')
+	text=text.replace('\'','')  
+	
+	tokens=[]
+	for punct in string.punctuation:
+		text=text.replace(punct,' ')   
+	
+	
+	for token in nltk.word_tokenize(text):
+		try:
+			tokens.append(lemmatizer.lemmatize(token).encode())
+		except:
+			continue
+	return tokens
+
 if __name__ == "__main__":
 
 	try:
@@ -22,15 +47,15 @@ if __name__ == "__main__":
 	ioStream=KafkaUtils.createDirectStream(ssc,[topic],{"metadata.broker.list": brokers})
 
 	#Trial code from https://apache.googlesource.com/spark/+/master/examples/src/main/python/streaming/direct_kafka_wordcount.py
-	ioStream.pprint()
-	# lines = ioStream.map(lambda x: x[1])
-	# lines.pprint().encode('ascii', 'ignore')
+	lines =ioStream.map(lambda x:(x[0],x[1]))
+	lines2 =ioStream.map(lambda x:(x[0],x[1]))
+	lines.pprint()
+	lines2.pprint()
+	#ioStream.pprint()
 
-	#lines.saveAsTextFiles("test1")
-	# counts = ioStream.flatMap(lambda line: line.split(" ")) \
- #        .map(lambda word: (word, 1)) \
- #        .reduceByKey(lambda a, b: a+b)
- #        counts.pprint()
+	
+	#lines.pprint()
+
 
 	ssc.start()
 	ssc.awaitTermination()
