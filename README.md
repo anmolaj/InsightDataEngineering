@@ -34,11 +34,14 @@ And these documents are then sored in Elasticsearch.
 ### Stream Processing
 Tweets are ingested using Kafka through a Twitter API (Tweepy). Spark Streaming is then used to classify these Tweets into appropriate categories and then are sent to Flask API.
 
+
 ### Pipeline
 
 <img src="pipeline.png" width="800">
 
-##Repository Structure
+[Project Slides](http://bit.ly/2th35CH
+
+### Repository Structure
 
 - `./Spark_Batch/` contains all relevant files for batch section of the project
 
