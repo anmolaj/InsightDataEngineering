@@ -65,27 +65,30 @@ class ClassifyText():
 		input: text (String): Text in the document
 		return: Array: processed text converted into tokens
 		"""
-	
-		common_tweet_stopwords=["rt","co","http","https"]
-		stopwords=nltk.corpus.stopwords.words('english')+common_tweet_stopwords
-		lemmatizer=nltk.stem.wordnet.WordNetLemmatizer()
-		text=text.lower()
-		text=text.replace('\'s','')
-		text=text.replace('\'','')
-		text = re.sub("\d+", "", text)
+		try:
+			common_tweet_stopwords=["rt","co","http","https"]
+			stopwords=nltk.corpus.stopwords.words('english')+common_tweet_stopwords
+			lemmatizer=nltk.stem.wordnet.WordNetLemmatizer()
+			text=text.lower()
+			text=text.replace('\'s','')
+			text=text.replace('\'','')
+			text = re.sub("\d+", "", text)
 
-		tokens=[]
-		for punct in string.punctuation:
-			text=text.replace(punct,' ')       
+			tokens=[]
+			for punct in string.punctuation:
+				text=text.replace(punct,' ')       
 
-		for token in nltk.word_tokenize(text):
-			try:
-				if token.encode() not in stopwords and len(token)>3:
-					tokens.append(lemmatizer.lemmatize(token).encode())
-			except:
-				continue
+			for token in nltk.word_tokenize(text):
+				try:
+					if token.encode() not in stopwords and len(token)>3:
+						tokens.append(lemmatizer.lemmatize(token).encode())
+				except:
+					continue
 
-		return tokens
+			return tokens
+		except:
+			print "Problem Processing Text:",text
+			return
 		pass
 
 	def process_all(self,df):

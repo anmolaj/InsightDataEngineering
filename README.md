@@ -26,104 +26,26 @@ The Flask based UI helps a user to select the category of his choice. Once selec
 The user can then select a word from this list which he most interested in and can find appropriate Wikipedia Titles
 
 The whole project had 2 aspects in implementation which are further discussed below
+
 ### Batch Processing
+The batch portion covers getting wikipedia data from dumps and storing them to s3. This data is then retrieved using spark and using classification algorithm the documents re classsified into appropriate categories.
+And these documents are then sored in Elasticsearch.
+
+### Stream Processing
+Tweets are ingested using Kafka through a Twitter API (Tweepy). Spark Streaming is then used to classify these Tweets into appropriate categories and then are sent to Flask API.
+
+### Pipeline
+
+<img src="pipeline.png" width="800">
+
+##Repository Structure
+
+- `./Spark_Batch/` contains all relevant files for batch section of the project
+
+- `./Kafka_Spark_Streaming/` contains the relevant files for the streaming section
 
 
 
-
-
-
-Below are basic instructions to understand initially
-
-## Change Install File
-Change Kafka version from 0.10.1.1 - 0.8.2.1
-
-##Technologies to install:
-
-(Tweets is the Tag_name)
-peg install Tweets ssh
-peg install Tweets aws
-peg install Tweets hadoop
-peg service Tweets hadoop start
-
-peg install Tweets zookeeper
-peg service Tweets zookeeper start
-
-peg install Tweets spark
-peg service Tweets spark start
-
-peg install Tweets kafka
-peg service Tweets kafka start
-
-peg install Tweets elasticsearch
-
-peg install Wiki ssh
-peg install Wiki aws
-peg install Wiki hadoop
-peg service Wiki hadoop start
-peg install Wiki spark
-peg service Wiki spark start
-
-peg install Wiki elasticsearch
-peg service Wiki elasticsearch start
-
-peg install ES elasticsearch
-peg service ES elasticsearch start
-
-##Kafka:
-
-1. Install Zookeeper
-2. pip install kafka-python / pip install pykafka
-3  install hadoop
-4  install spark
-
-
-
-#After SSHing
-change broker id
-
-sudo vi /usr/local/kafka/config/server.properties
-
-sudo pip install kafka-python
-sudo pip install tweepy
-sudo pip install nltk
-sudo python -m nltk.downloader all
-sudo python -m nltk.downloader punkt
-sudo python -m nltk.downloader wordnet
-
-Update python:
-sudo add-apt-repository ppa:fkrull/deadsnakes-python2.7
-sudo apt-get update 
-sudo apt-get install python2.7   --This uodates to python 2.7.12
-
-Start Zookeeper
-nohup /usr/local/kafka/bin/zookeeper-server-start.sh config/zookeeper.properties &
-
-Start kafka server:
-/usr/local/kafka/bin/kafka-topics.sh --create --zookeeper ip-10-0-0-4:2181,ip-10-0-0-6:2181 --replication-factor 3 --partitions 2 --topic tweet-topic
-/usr/local/kafka/bin/kafka-topics.sh --create --zookeeper localhost:2181 --replication-factor 3 --partitions 2 --topic tweet-topic2
-
-/usr/local/kafka/bin/kafka-topics.sh --describe --zookeeper localhost:2181 --topic tweet-topic2
-
-Delete a Topic:
-/usr/local/kafka/bin/kafka-topics.sh --zookeeper localhost:2181 --delete --topic tweet-topic2
-
-Copying pkl to consumer:
- scp -i /Users/anmoljain/Desktop/Insight/anmolj-E1.pem /Users/anmoljain/Desktop/Insight/Clustering/twitter.pkl ubuntu@ec2-34-225-80-111.compute-1.amazonaws.com:
-
- scp -r -i /Users/anmoljain/Desktop/Insight/anmolj-E1.pem  /Users/anmoljain/Desktop/Insight/Clustering/Training/bbc2 ubuntu@ec2-34-225-80-111.compute-1.amazonaws.com:
-
- #Wikipedia cluster
-
-  scp -r -i /Users/anmoljain/Desktop/Insight/anmolj-E1.pem  /Users/anmoljain/Desktop/Insight/Clustering/Training/bbc2 ubuntu@ec2-34-228-107-60.compute-1.amazonaws.com:
-
-  scp -r -i /Users/anmoljain/Desktop/Insight/anmolj-E1.pem  /Users/anmoljain/Desktop/Insight/Dashboard/flask ubuntu@ec2-34-225-80-111.compute-1.amazonaws.com:
-
-	scp -r -i /Users/anmoljain/Desktop/Insight/anmolj-E1.pem  /Users/anmoljain/Desktop/Insight/InsightDataEngineeringProject/ClassifyText.py ubuntu@ec2-34-228-107-60.compute-1.amazonaws.com:
-
-#Code Reference:
-1. http://kafka-python.readthedocs.io/en/master/usage.html
-2. https://github.com/apache/spark/blob/master/examples/src/main/python/streaming/kafka_wordcount.py
 
 
 

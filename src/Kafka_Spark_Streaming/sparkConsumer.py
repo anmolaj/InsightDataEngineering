@@ -45,11 +45,30 @@ def convert_to_word_df(rdd):
 
 		
 		tweets_sorted_df.show()
+		send_df_to_dashboard(tweets_cat_final_df)
 		
 	
 	except:
 		e = sys.exc_info()[0]
 		print("Error: %s" % e)
+
+def send_df_to_dashboard(df):
+	"""
+	Sending each dataframe to UI
+	input: word by dataframe to display
+	output: sending dataframe as appropriate inputs to POST method
+	"""
+	
+	cat = [str(t.tweet_category) for t in df.select("tweet_category").collect()]
+
+	top_word=[str(t.tweet_word) for t in df.select("tweet_word").collect()]
+
+	# extract the counts from dataframe and convert them into array
+	word_count = [p.tweet_word_count for p in df.select("tweet_word_count").collect()]
+	
+	url = 'http://ec2-23-22-163-250.compute-1.amazonaws.com/updateWordData'
+	request_data = {'labels': str(cat), 'word_data': str(cat_count),'word_count': str(word_count)}
+	response = requests.post(url, data=request_data)
 
 def convert_to_cat_df(rdd_cat):
 	"""
@@ -66,7 +85,7 @@ def convert_to_cat_df(rdd_cat):
 
 		
 		# create a DF from the Row RDD
-		tweet_cat_df = sql_cat_context.createDataFrame(row_cat_rdd,['tweet_category',"count"])
+		tweet_cat_df = sql_cat_context.createDataFrame(row_cat_rdd,['tweet_category',"count_cat"])
 
 		query="Select * from TweetsCategory"
 
@@ -76,7 +95,7 @@ def convert_to_cat_df(rdd_cat):
 		tweets_cat_final_df.show()
 
 
-		send_df_to_dashboard(tweets_cat_final_df)
+		send_df_cat_to_dashboard(tweets_cat_final_df)
 	
 	
 	except:
@@ -84,17 +103,17 @@ def convert_to_cat_df(rdd_cat):
 		print("Error: %s" % e)
 
 
-def send_df_to_dashboard(df):
+def send_df_cat_to_dashboard(df):
 	"""
 	Sending each dataframe to UI
-	input: dataframe to display
+	input: category dataframe to display
 	output: sending dataframe as appropriate inputs to POST method
 	"""
-	# extract the hashtags from dataframe and convert them into array
+	
 	top_cat = [str(t.tweet_category) for t in df.select("tweet_category").collect()]
 	# extract the counts from dataframe and convert them into array
-	cat_count = [p.count for p in df.select("count").collect()]
-	# initialize and send the data through REST API
+	cat_count = [p.count_cat for p in df.select("count_cat").collect()]
+	
 	url = 'http://ec2-23-22-163-250.compute-1.amazonaws.com/updateData'
 	request_data = {'labels': str(top_cat), 'data': str(cat_count)}
 	response = requests.post(url, data=request_data)

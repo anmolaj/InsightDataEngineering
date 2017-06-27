@@ -3,10 +3,15 @@ from kafka.errors import KafkaError
 import tweepy
 
 
-accessToken="XXXX"
-accessTokenSecret="XXXX"
-consumerKey="XXXX"
-consumerSecret="XXXX"
+accessToken="760434835076841472-CPywqvwOqLfPWuPvaPGgVk0yncWos2Z"
+accessTokenSecret="zjCndaS5EfozdIpxs56GRMbBmFSlCFkxZxyzgZqsmHWOQ"
+consumerKey="sUlpNAkJgSQOMqIgJ1cYsMdvv"
+consumerSecret="EYNFnb8F3k6s8IXSUXMY99ZbiBu4XqhGYVbuPZF7hZgbL996uC"
+
+# accessToken="XXXX"
+# accessTokenSecret="XXXX"
+# consumerKey="XXXX"
+# consumerSecret="XXXX"
 
 auth=tweepy.OAuthHandler(consumerKey,consumerSecret)
 
