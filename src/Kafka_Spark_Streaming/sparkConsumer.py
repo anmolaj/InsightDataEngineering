@@ -9,10 +9,6 @@ from pyspark.streaming.kafka import KafkaUtils
 from pyspark.sql.context import Row,SQLContext
 import requests
 
-from ClassifyText import ClassifyText
-
-
-
 
 #Reference :https://www.toptal.com/apache/apache-spark-streaming-twitter
 def get_sql_context_instance(spark_context):
@@ -41,10 +37,10 @@ def convert_to_word_df(rdd):
 
 		tweet_df.registerTempTable("TweetsCategoryWords")
 
-		tweets_sorted_df = sql_context.sql(query_words)
+		tweets_cat_final_df = sql_context.sql(query_words)
 
 		
-		tweets_sorted_df.show()
+		tweets_cat_final_df.show()
 		send_df_to_dashboard(tweets_cat_final_df)
 		
 	
@@ -61,14 +57,17 @@ def send_df_to_dashboard(df):
 	
 	cat = [str(t.tweet_category) for t in df.select("tweet_category").collect()]
 
-	top_word=[str(t.tweet_word) for t in df.select("tweet_word").collect()]
+	cat_word=[str(t.tweet_word) for t in df.select("tweet_word").collect()]
 
 	# extract the counts from dataframe and convert them into array
 	word_count = [p.tweet_word_count for p in df.select("tweet_word_count").collect()]
 	
-	url = 'http://ec2-23-22-163-250.compute-1.amazonaws.com/updateWordData'
-	request_data = {'labels': str(cat), 'word_data': str(cat_count),'word_count': str(word_count)}
-	response = requests.post(url, data=request_data)
+	url = '<url>/updateWordData'
+	request_data = {'labels_word': str(cat), 'word_data': str(cat_word),'word_count': str(word_count)}
+	try:
+		response = requests.post(url, data=request_data)
+	except:
+		pass
 
 def convert_to_cat_df(rdd_cat):
 	"""
@@ -96,7 +95,7 @@ def convert_to_cat_df(rdd_cat):
 
 
 		send_df_cat_to_dashboard(tweets_cat_final_df)
-	
+		
 	
 	except:
 		e = sys.exc_info()[0]
@@ -113,15 +112,20 @@ def send_df_cat_to_dashboard(df):
 	top_cat = [str(t.tweet_category) for t in df.select("tweet_category").collect()]
 	# extract the counts from dataframe and convert them into array
 	cat_count = [p.count_cat for p in df.select("count_cat").collect()]
-	
-	url = 'http://ec2-23-22-163-250.compute-1.amazonaws.com/updateData'
+	print (top_cat)
+	print (cat_count)
+	url = '<url>/updateData'
 	request_data = {'labels': str(top_cat), 'data': str(cat_count)}
-	response = requests.post(url, data=request_data)
+	try:
+		response = requests.post(url, data=request_data)
+	except:
+		pass
 
 
 
 if __name__ == "__main__":
 
+	from TextClassification import ClassifyText
 
 	#Windowing Reference :https://prateekvjoshi.com/2015/12/29/performing-windowed-computations-on-streaming-data-using-spark-in-python/
 
@@ -130,7 +134,7 @@ if __name__ == "__main__":
 	frequency = 2 * batch_interval
 	checkpointInterval=6*frequency
 
-	sc = SparkContext(appName="TweetProcess")
+	sc = SparkContext(appName="TweetProcess",pyFiles=['TextClassification.py'])
 	ssc= StreamingContext(sc,batch_interval)
 	sqlContext = SQLContext(sc)
 	sc.setLogLevel("WARN")
@@ -141,7 +145,7 @@ if __name__ == "__main__":
 	print ("Start---------------")
 	tweet_model= ClassifyText()
 
-	brokers = 'ip-172-31-63-36:9092,ip-172-31-63-107:9092'
+	brokers = '<broker-list (in comma separated string)>'
 	topic="tweet-topic"
 
 
@@ -162,9 +166,9 @@ if __name__ == "__main__":
 	counted_words.checkpoint(checkpointInterval)
 	counted_category.checkpoint(checkpointInterval)
 	
-	counted_words.pprint()
+	
 	counted_words.foreachRDD(convert_to_word_df)
-	counted_category.pprint()
+
 	counted_category.foreachRDD(convert_to_cat_df)
 
 	ssc.start()

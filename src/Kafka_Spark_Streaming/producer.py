@@ -3,15 +3,10 @@ from kafka.errors import KafkaError
 import tweepy
 
 
-accessToken="760434835076841472-CPywqvwOqLfPWuPvaPGgVk0yncWos2Z"
-accessTokenSecret="zjCndaS5EfozdIpxs56GRMbBmFSlCFkxZxyzgZqsmHWOQ"
-consumerKey="sUlpNAkJgSQOMqIgJ1cYsMdvv"
-consumerSecret="EYNFnb8F3k6s8IXSUXMY99ZbiBu4XqhGYVbuPZF7hZgbL996uC"
-
-# accessToken="XXXX"
-# accessTokenSecret="XXXX"
-# consumerKey="XXXX"
-# consumerSecret="XXXX"
+accessToken="XXXX"
+accessTokenSecret="XXXX"
+consumerKey="XXXX"
+consumerSecret="XXXX"
 
 auth=tweepy.OAuthHandler(consumerKey,consumerSecret)
 
@@ -21,7 +16,7 @@ producer = KafkaProducer(bootstrap_servers=['localhost:9092'])
 class TweetListener(tweepy.StreamListener):
 	"""
 	Perform Appropriate Action on Stream
-	input : 
+	input : StreamListener 
 	return : Approrpiate Error or sending tweets to consumer
 	"""
     def on_status(self,status):

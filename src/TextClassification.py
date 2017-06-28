@@ -11,6 +11,7 @@ class ClassifyText():
 	global Counter
 	global CountVectorizer
 	global TfidfTransformer
+	global requests
 
 	import re
 	import string
@@ -20,6 +21,7 @@ class ClassifyText():
 	import glob
 	from collections import Counter
 	from sklearn.feature_extraction.text import CountVectorizer, TfidfTransformer
+	import requests
 
 
 	def __init__(self):
@@ -66,8 +68,11 @@ class ClassifyText():
 		return: Array: processed text converted into tokens
 		"""
 		try:
+			url_stop_words="http://www.mit.edu/~ecprice/wordlist.10000"
+			response= requests.get(url_stop_words)
+			common_words=response.content.split("\n")
 			common_tweet_stopwords=["rt","co","http","https"]
-			stopwords=nltk.corpus.stopwords.words('english')+common_tweet_stopwords
+			stopwords=common_tweet_stopwords+common_words
 			lemmatizer=nltk.stem.wordnet.WordNetLemmatizer()
 			text=text.lower()
 			text=text.replace('\'s','')
@@ -77,10 +82,10 @@ class ClassifyText():
 			tokens=[]
 			for punct in string.punctuation:
 				text=text.replace(punct,' ')       
-
+			len_tweet_min=3
 			for token in nltk.word_tokenize(text):
 				try:
-					if token.encode() not in stopwords and len(token)>3:
+					if token.encode() not in stopwords and len(token)>len_tweet_min:
 						tokens.append(lemmatizer.lemmatize(token).encode())
 				except:
 					continue
@@ -106,7 +111,7 @@ class ClassifyText():
 
 	def get_rare_words(self,processed_articles):
 		"""
-		Getting rare word. These are words which are very less often used, And so these wont be much relevant
+		Getting rare word. These are words which are very less often used (used once), And so these wont be much relevant
 		input: processed_articles (dataframe): The datframe which consists of categories and the processed text
 		return: Array: rare words 
 		"""
