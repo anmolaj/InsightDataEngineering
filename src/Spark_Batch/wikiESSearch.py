@@ -5,7 +5,7 @@ import hashlib
 This file is to check Elasticsearch database
 """
 
-es_cluster=["ec2-34-205-123-236.compute-1.amazonaws.com","ec2-34-226-76-219.compute-1.amazonaws.com","ec2-34-226-104-234.compute-1.amazonaws.com"]
+es_cluster=["<List-of-nodes>"]
 
 es=Elasticsearch(es_cluster,http_auth=('elastic','changeme'))
 

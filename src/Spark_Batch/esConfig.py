@@ -24,7 +24,7 @@ def create_es_index(categories):
 
 
 if __name__ == "__main__":
-	es_cluster=["ec2-34-205-123-236.compute-1.amazonaws.com","ec2-34-226-76-219.compute-1.amazonaws.com","ec2-34-226-104-234.compute-1.amazonaws.com"]
+	es_cluster=["<List-of-nodes>"]	
 	categories=['business','entertainment','politics','sport','tech']
 	es=Elasticsearch(es_cluster,http_auth=('elastic','changeme'))
 	create_es_index(categories)

@@ -6,19 +6,12 @@ import json
 import hashlib
 
 
-
-# import org.apache.spark.sql.SQLContext    
-# import org.apache.spark.sql.SQLContext._
-
-# import org.elasticsearch.spark.sql._
-
-# import org.elasticsearch.spark.sql
 from pyspark.sql import SQLContext
 from pyspark.sql.functions import udf
 from pyspark.sql.types import *
 
 
-es_cluster=["ec2-34-205-123-236.compute-1.amazonaws.com:9200","ec2-34-226-76-219.compute-1.amazonaws.com:9200","ec2-34-226-104-234.compute-1.amazonaws.com:9200"]
+es_cluster=["<List-of-nodes>"]
 
 es=Elasticsearch(es_cluster,http_auth=('elastic','changeme'))
 
