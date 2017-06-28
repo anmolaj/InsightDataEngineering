@@ -39,7 +39,7 @@ Tweets are ingested using Kafka through a Twitter API (Tweepy). Spark Streaming 
 
 <img src="pipeline.png" width="800">
 
-[Project Slides](http://bit.ly/2th35CH)
+[Project Slides](https://docs.google.com/presentation/d/1_coyhE1g0bii5ksxXF5ZrVSsFeIRwepHLKS6eXqR1iE/pub?start=false&loop=false&delayms=3000)
 
 ### Repository Structure
 
