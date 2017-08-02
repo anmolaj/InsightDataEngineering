@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html>
+	<head>
+    	<meta charset="utf-8"/>
+    	<title>TWEETOPEDIA</title>
+      
+	
+	</head>
+	<body>
+            
+
+            <h2>Wikipedia Titles</h2>
+
+                {% for x in values %}
+              
+                        <a style="text-decoration:none; color:#ff0000;" href="https://en.wikipedia.org/wiki/{{ x['_source']['title'] }}"> "{{ x['_source']['title'] }}"</a></br>
+                {% endfor %}
+        	<div style="width:700px;height=500px">
+            	<canvas id="chart"></canvas>
+        	</div>
+	</body>
+</html>

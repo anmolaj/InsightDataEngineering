@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+    <head>
+        <meta charset="utf-8"/>
+        <title>TWEETOPEDIA</title>
+      
+    
+    </head>
+    <body>
+   
+            
+            
+
+            <h2>Top Trending Entertainment Words</h2>
+
+                {% for (x,y) in values %}
+                    {% if x=="politics" %}
+                        
+                        <a style="text-decoration:none; color:#ff0000;" href="/search/entertainment|{{ y }}"> "{{ y }}"</a><br>
+                        
+                    {% endif %}
+                {% endfor %}
+            <div style="width:700px;height=500px">
+            </div>
+
+    </body>
+</html>
+
